@@ -1,7 +1,6 @@
 package com.wz.mybatis.executor;
 
 import com.wz.mybatis.config.Configuration;
-import org.apache.ibatis.executor.CachingExecutor;
 
 /**
  * Executor工厂方法
