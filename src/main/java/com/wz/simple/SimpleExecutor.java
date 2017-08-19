@@ -1,14 +1,18 @@
 package com.wz.simple;
 
 import com.wz.bean.TestBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 /**
- * 模拟sql的执行与结果的映射
+ * 执行sql的一种实现
+ * 用以sql的执行与结果的映射
  * Created by wangzi on 2017-07-26.
  */
 public class SimpleExecutor implements Executor {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleExecutor.class);
     @Override
     public <E> E query(String sql, Object parameter) {
         try{
@@ -22,19 +26,18 @@ public class SimpleExecutor implements Executor {
             }
             return (E)test;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Executor SQL ERROR {},{}", sql, e.getMessage());
         }
         return null;
     }
 
     private Connection getConnection() throws Exception{
-        String driver = "com.mysql.jdbc.Driver";
+        String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC";
         String userName = "root";
         String passWord = "123456";
-        Connection connection = null;
         Class.forName(driver);
-        connection = DriverManager.getConnection(url, userName, passWord);
+        Connection connection = DriverManager.getConnection(url, userName, passWord);
         return connection;
     }
 }

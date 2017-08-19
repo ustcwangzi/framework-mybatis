@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 模拟Mybatis中的XML文件，建立方法和SQL
+ * 模拟Mybatis中的XML文件，建立方法名和SQL的映射关系
  * Created by wangzi on 2017-07-26.
  */
 public class TestMapperXml {

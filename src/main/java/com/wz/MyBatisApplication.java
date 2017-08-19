@@ -3,8 +3,7 @@ package com.wz;
 import com.wz.bean.TestBean;
 import com.wz.mybatis.config.Configuration;
 import com.wz.mybatis.executor.ExecutorFactory;
-import com.wz.mybatis.session.SqlSession;
-import com.wz.simple.MySqlSession;
+import com.wz.simple.SqlSession;
 import com.wz.simple.TestMapper;
 
 import java.io.IOException;
@@ -15,12 +14,13 @@ import java.io.IOException;
  */
 public class MyBatisApplication {
     public static void main(String[] args) throws Exception{
-//        startSimple();
-        start();
+        startSimple();
+//        start();
     }
 
+    //简单版本
     private static void startSimple(){
-        MySqlSession sqlSession = new MySqlSession();
+        SqlSession sqlSession = new SqlSession();
         //使用同一的代理类去完成sql操作
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         TestBean test = testMapper.selectByPrimaryKey(1);
@@ -31,7 +31,7 @@ public class MyBatisApplication {
         Configuration configuration = new Configuration().scanPath("com.wz.mybatis.mapper");
         configuration.build();
 //        SqlSession sqlSession = new SqlSession(configuration, ExecutorFactory.defaultExecutor(configuration));
-        SqlSession sqlSession = new SqlSession(configuration, ExecutorFactory.get(ExecutorFactory.ExecutorType.CACHE, configuration));
+        com.wz.mybatis.session.SqlSession sqlSession = new com.wz.mybatis.session.SqlSession(configuration, ExecutorFactory.get(ExecutorFactory.ExecutorType.CACHE, configuration));
         com.wz.mybatis.mapper.TestMapper testMapper =  sqlSession.getMapper(com.wz.mybatis.mapper.TestMapper.class);
         long start = System.currentTimeMillis();
         TestBean test = testMapper.selectByPrimaryKey(1);
