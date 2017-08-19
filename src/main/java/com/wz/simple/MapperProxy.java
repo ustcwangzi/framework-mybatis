@@ -14,11 +14,9 @@ import java.lang.reflect.Method;
 public class MapperProxy<T> implements InvocationHandler{
     private static final Logger logger = LoggerFactory.getLogger(MapperProxy.class);
     private final SqlSession sqlSession;
-    private final Class<T> mapperInterface;
 
     public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface) {
         this.sqlSession = sqlSession;
-        this.mapperInterface = mapperInterface;
     }
 
     @Override
@@ -26,13 +24,12 @@ public class MapperProxy<T> implements InvocationHandler{
         String methodName = method.getDeclaringClass().getName() + "." + method.getName();
         if(methodName.equals(TestMapperXml.nameSpace)){
             String sql = TestMapperXml.methodSqlMapping.get(methodName);
-            if (sql == null){
-                logger.error("Cannot found Corresponding sql of method[ {} ]", method);
-                return null;
+            if (sql != null) {
+                logger.info("SQL[ {} ], parameter[ {} ]", sql, args[0]);
+                return sqlSession.selectOne(sql, String.valueOf(args[0]));
             }
-            logger.info("SQL[ {} ], parameter[ {} ]", sql, args[0]);
-            return sqlSession.selectOne(sql, String.valueOf(args[0]));
         }
+        logger.error("Cannot found Corresponding sql of method[ {} ]", method);
         return null;
     }
 }

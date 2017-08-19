@@ -1,23 +1,21 @@
 package com.wz.mybatis.executor;
 
-import com.wz.mybatis.config.Configuration;
-
 /**
  * Executor工厂方法
  * Created by wangzi on 2017-07-30.
  */
 public class ExecutorFactory {
 
-    public static Executor defaultExecutor(Configuration configuration){
-        return get(ExecutorType.SIMPLE, configuration);
+    public static Executor defaultExecutor(){
+        return get(ExecutorType.SIMPLE);
     }
 
-    public static Executor get(ExecutorType type, Configuration configuration){
+    public static Executor get(ExecutorType type){
         if (ExecutorType.SIMPLE.equals(type)){
-            return new SimpleExecutor(configuration);
+            return new SimpleExecutor();
         }
         if (ExecutorType.CACHE.equals(type)){
-            return new CacheExecutor(new SimpleExecutor(configuration));
+            return new CacheExecutor(new SimpleExecutor());
         }
         throw new RuntimeException("No executor found");
     }

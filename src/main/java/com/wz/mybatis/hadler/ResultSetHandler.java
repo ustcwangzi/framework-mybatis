@@ -1,8 +1,6 @@
 package com.wz.mybatis.hadler;
 
-import com.wz.mybatis.config.Configuration;
-import com.wz.mybatis.mapper.TestMapperXml;
-import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import com.wz.mybatis.MapperXml;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,26 +13,17 @@ import java.sql.SQLException;
  * Created by wangzi on 2017-07-30.
  */
 public class ResultSetHandler {
-    private final Configuration configuration;
-
-    public ResultSetHandler(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    public <E> E handler(PreparedStatement statement, TestMapperXml.MapperData mapperData) throws Exception{
-        Object resultObj = new DefaultObjectFactory().create(mapperData.getType());
+    public <E> E handler(PreparedStatement statement, MapperXml.MapperData mapperData) throws Exception{
+        Class clazz = mapperData.getType();
+        Object resultObj = clazz.newInstance();
         ResultSet rs = statement.getResultSet();
-        if (rs.next()){
-            for (Field field : resultObj.getClass().getDeclaredFields()){
-                setValue(resultObj, field, rs);
+        while (rs.next()){
+            for (Field field : clazz.getDeclaredFields()){
+                Method setMethod = clazz.getMethod("set" + upperCapital(field.getName()), field.getType());
+                setMethod.invoke(resultObj, getResult(field, rs));
             }
         }
         return (E)resultObj;
-    }
-
-    private void setValue(Object resultObj, Field field, ResultSet rs) throws Exception{
-        Method setMethod = resultObj.getClass().getMethod("set" + upperCapital(field.getName()), field.getType());
-        setMethod.invoke(resultObj, getResult(field, rs));
     }
 
     /**
