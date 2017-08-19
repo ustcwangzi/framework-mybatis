@@ -23,8 +23,13 @@ public class MapperProxy<T> implements InvocationHandler{
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if(method.getDeclaringClass().getName().equals(TestMapperXml.nameSpace)){
-            String sql = TestMapperXml.methodSqlMapping.get(method.getName());
+        String methodName = method.getDeclaringClass().getName() + "." + method.getName();
+        if(methodName.equals(TestMapperXml.nameSpace)){
+            String sql = TestMapperXml.methodSqlMapping.get(methodName);
+            if (sql == null){
+                logger.error("Cannot found Corresponding sql of method[ {} ]", method);
+                return null;
+            }
             logger.info("SQL[ {} ], parameter[ {} ]", sql, args[0]);
             return sqlSession.selectOne(sql, String.valueOf(args[0]));
         }

@@ -8,10 +8,10 @@ import java.util.Map;
  * Created by wangzi on 2017-07-26.
  */
 public class TestMapperXml {
-    public static final String nameSpace = "com.wz.simple.TestMapper";
+    public static final String nameSpace = "com.wz.simple.TestMapper.selectByPrimaryKey";
     //方法和sql的映射
     public static final Map<String, String> methodSqlMapping = new HashMap<>();
     static {
-        methodSqlMapping.put("selectByPrimaryKey", "select * from test where id = %d");
+        methodSqlMapping.put(nameSpace, "select * from test where id = %d");
     }
 }
